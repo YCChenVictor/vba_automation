@@ -1,0 +1,82 @@
+Attribute VB_Name = "Module1"
+Function Find_date_col_num(WS As Worksheet, date_data, date_format, Optional which_one = 1)
+
+    Dim R_cell As Range
+    Dim findStr As String
+    
+    findStr = Format(date_data, date_format)
+    
+    With WS
+    
+        Set R_cell = .Cells.Find(findStr, LookIn:=xlValues, lookat:=xlWhole)
+        
+        If which_one > 1 Then
+        
+            For i = 2 To which_one
+            
+                Set R_cell = .Cells.FindNext(R_cell)
+            
+            Next
+            
+        End If
+        
+    End With
+    
+    Find_date_col_num = R_cell.Column
+
+End Function
+
+Function Find_cell_row_num(WS As Worksheet, data, Optional which_one = 1)
+
+    Dim R_cell As Range
+    
+    With WS
+    
+        Set R_cell = .Cells.Find(data, LookIn:=xlValues, lookat:=xlWhole)
+        
+        If which_one > 1 Then
+        
+            For i = 2 To which_one
+            
+                Set R_cell = .Cells.FindNext(R_cell)
+                
+            Next
+        
+        End If
+        
+    End With
+    
+    Find_cell_row_num = R_cell.Row
+
+End Function
+
+Function fill_table_date(destination_sheet As Worksheet, source_sheet As Worksheet, destination_row_names As Range, destination_col_names As Range, destination_date_format as String, source_date_format as String, find_range = "A1:ZZ10000", optional source_row_which_one = 1)
+
+    'destination_sheet
+    'source_sheet
+    'destination_row_names
+    'destination_col_names
+    'destination_date_format
+    'source_date_format
+    'find_range
+    'source_row_which_one
+
+    For Each row_name In Destination_row_name
+    
+        row_number_source = Find_cell_row_num(source_sheet, row_name, source_row_which_one)
+        row_number_destination = Find_cell_row_num(destination_sheet, row_name)
+        
+        For Each col_name In destination_col_names
+        
+            col_number_source = Find_date_col_num(source_sheet, col_name, source_date_format)
+            col_number_destination = Find_date_col_num(destination_sheet, col_name, destination_date_format)
+            
+            source_sheet.Cells(row_number_source, col_number_source).Copy
+            destination_sheet.Cells(row_number_destination, col_num_destination).PasteSpecial Paste:=xlPasteValue
+            
+        Next
+        
+    Next
+
+End Function
+
